@@ -188,7 +188,8 @@ func deleteItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Item deleted"})
+	// Return 204 No Content after successful deletion
+    c.Status(http.StatusNoContent) // Status 204
 }
 
 // @Summary Get all shopping items
