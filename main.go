@@ -45,6 +45,11 @@ func main() {
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 	db, err = sql.Open("postgres", dbURL)
 	if err != nil {
+		log.Fatalf("Failed to open database: %v", err)
+	}
+
+	// Verify the connection
+	if err := db.Ping(); err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	defer db.Close()
@@ -61,10 +66,26 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.Use(cors.Default())
+
+	// CORS Configuration
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5000"}, // Replace with your frontend's URL
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	// Swagger Endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Health Check Endpoint
+	r.GET("/health", func(c *gin.Context) {
+		if err := db.Ping(); err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Database connection failed"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"status": "OK"})
+	})
 
 	// Routes
 	r.GET("/api/shoppingItems/:name", getItemByName)
@@ -116,13 +137,23 @@ func updateItem(c *gin.Context) {
 		return
 	}
 
+	// Input validation
+	if updatedItem.Amount <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Amount must be greater than zero"})
+		return
+	}
+
 	result, err := db.Exec("UPDATE shopping_items SET amount = $1 WHERE name = $2", updatedItem.Amount, name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item"})
 		return
 	}
 
-	rowsAffected, _ := result.RowsAffected()
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check affected rows"})
+		return
+	}
 	if rowsAffected == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
 		return
@@ -147,7 +178,11 @@ func deleteItem(c *gin.Context) {
 		return
 	}
 
-	rowsAffected, _ := result.RowsAffected()
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check affected rows"})
+		return
+	}
 	if rowsAffected == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
 		return
@@ -179,8 +214,16 @@ func getAllItems(c *gin.Context) {
 		items = append(items, item)
 	}
 
+	// If no items were found, ensure we return an empty array
+	if len(items) == 0 {
+		c.JSON(http.StatusOK, []ShoppingItem{}) // Return an empty array instead of null
+		return
+	}
+
+	// Otherwise, return the list of items
 	c.JSON(http.StatusOK, items)
 }
+
 
 // @Summary Add a new shopping item
 // @Description Add a new item to the shopping list
@@ -193,6 +236,16 @@ func addItem(c *gin.Context) {
 	var newItem ShoppingItem
 	if err := c.ShouldBindJSON(&newItem); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	// Input validation
+	if newItem.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Item name cannot be empty"})
+		return
+	}
+	if newItem.Amount <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Amount must be greater than zero"})
 		return
 	}
 

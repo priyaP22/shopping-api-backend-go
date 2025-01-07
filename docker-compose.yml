@@ -27,10 +27,15 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: mypassword #not secure for testing purposes
+      POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: shoppingdb
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d shoppingdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     image: maeddes/frontendflask:hft24
