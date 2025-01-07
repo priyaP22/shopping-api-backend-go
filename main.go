@@ -29,7 +29,7 @@ var db *sql.DB
 // @description A simple API to manage shopping items with PostgreSQL
 // @contact.name Your Name
 // @contact.email yourname@example.com
-// @host localhost:8080
+// @host ${HOST}   // Dynamic host will be substituted at runtime
 // @BasePath /api
 func main() {
 	var err error
@@ -69,10 +69,9 @@ func main() {
 
 	// CORS Configuration
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5000"}, // Replace with your frontend's URL
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		AllowCredentials: true,
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:    []string{"Origin", "Content-Type", "Authorization"},
 	}))
 
 	// Swagger Endpoint
@@ -189,7 +188,7 @@ func deleteItem(c *gin.Context) {
 	}
 
 	// Return 204 No Content after successful deletion
-    c.Status(http.StatusNoContent) // Status 204
+	c.Status(http.StatusNoContent) // Status 204
 }
 
 // @Summary Get all shopping items
@@ -224,7 +223,6 @@ func getAllItems(c *gin.Context) {
 	// Otherwise, return the list of items
 	c.JSON(http.StatusOK, items)
 }
-
 
 // @Summary Add a new shopping item
 // @Description Add a new item to the shopping list
