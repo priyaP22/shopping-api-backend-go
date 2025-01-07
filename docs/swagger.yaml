@@ -1,0 +1,133 @@
+basePath: /api
+definitions:
+  main.ItemResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  main.ItemsListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/main.ShoppingItem'
+        type: array
+      message:
+        type: string
+    type: object
+  main.ShoppingItem:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: This is a sample API for managing shopping items.
+  title: Shopping API
+  version: "1.0"
+paths:
+  /shoppingItems:
+    get:
+      description: Get a list of all shopping items
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ItemsListResponse'
+      summary: Get all shopping items
+      tags:
+      - Shopping Items API
+    post:
+      description: Add a new shopping item to the list
+      parameters:
+      - description: Shopping Item
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/main.ShoppingItem'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+      summary: Add a new shopping item
+      tags:
+      - Shopping Items API
+  /shoppingItems/{name}:
+    delete:
+      description: Delete a specific shopping item by its name
+      parameters:
+      - description: Item name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+      summary: Delete a shopping item by name
+      tags:
+      - Shopping Items API
+    get:
+      description: Get a specific shopping item by its name
+      parameters:
+      - description: Item name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+      summary: Get a shopping item by name
+      tags:
+      - Shopping Items API
+    put:
+      description: Update an existing shopping item's details
+      parameters:
+      - description: Item name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Shopping Item
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/main.ShoppingItem'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ItemResponse'
+      summary: Update a shopping item by name
+      tags:
+      - Shopping Items API
+swagger: "2.0"

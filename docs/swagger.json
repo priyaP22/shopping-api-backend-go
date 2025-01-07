@@ -1,0 +1,202 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample API for managing shopping items.",
+        "title": "Shopping API",
+        "contact": {
+            "name": "API Support",
+            "email": "support@example.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/shoppingItems": {
+            "get": {
+                "description": "Get a list of all shopping items",
+                "tags": [
+                    "Shopping Items API"
+                ],
+                "summary": "Get all shopping items",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemsListResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new shopping item to the list",
+                "tags": [
+                    "Shopping Items API"
+                ],
+                "summary": "Add a new shopping item",
+                "parameters": [
+                    {
+                        "description": "Shopping Item",
+                        "name": "item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ShoppingItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/shoppingItems/{name}": {
+            "get": {
+                "description": "Get a specific shopping item by its name",
+                "tags": [
+                    "Shopping Items API"
+                ],
+                "summary": "Get a shopping item by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Item name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing shopping item's details",
+                "tags": [
+                    "Shopping Items API"
+                ],
+                "summary": "Update a shopping item by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Item name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Shopping Item",
+                        "name": "item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ShoppingItem"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a specific shopping item by its name",
+                "tags": [
+                    "Shopping Items API"
+                ],
+                "summary": "Delete a shopping item by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Item name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ItemResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.ItemResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.ItemsListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/main.ShoppingItem"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.ShoppingItem": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
