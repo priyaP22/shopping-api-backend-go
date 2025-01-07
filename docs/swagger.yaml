@@ -1,53 +1,49 @@
-basePath: /api
+basePath: /
 definitions:
-  main.ItemResponse:
+  main.ErrorResponse:
     properties:
-      data: {}
-      message:
+      error:
         type: string
     type: object
-  main.ItemsListResponse:
+  main.ResponseMessage:
     properties:
-      data:
-        items:
-          $ref: '#/definitions/main.ShoppingItem'
-        type: array
       message:
         type: string
     type: object
   main.ShoppingItem:
     properties:
       amount:
+        example: 2
         type: integer
       name:
+        example: Milk
         type: string
     type: object
-host: localhost:8080
 info:
-  contact:
-    email: support@example.com
-    name: API Support
-  description: This is a sample API for managing shopping items.
+  contact: {}
+  description: A simple API to manage shopping items with PostgreSQL
   title: Shopping API
   version: "1.0"
 paths:
-  /shoppingItems:
+  /api/shoppingItems:
     get:
-      description: Get a list of all shopping items
+      description: Retrieve all shopping items
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ItemsListResponse'
+            items:
+              $ref: '#/definitions/main.ShoppingItem'
+            type: array
       summary: Get all shopping items
       tags:
       - Shopping Items API
     post:
-      description: Add a new shopping item to the list
+      description: Add a new item to the shopping list
       parameters:
-      - description: Shopping Item
+      - description: New shopping item
         in: body
-        name: item
+        name: shoppingItem
         required: true
         schema:
           $ref: '#/definitions/main.ShoppingItem'
@@ -55,15 +51,15 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ShoppingItem'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ErrorResponse'
       summary: Add a new shopping item
       tags:
       - Shopping Items API
-  /shoppingItems/{name}:
+  /api/shoppingItems/{name}:
     delete:
       description: Delete a specific shopping item by its name
       parameters:
@@ -76,16 +72,16 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ResponseMessage'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ErrorResponse'
       summary: Delete a shopping item by name
       tags:
       - Shopping Items API
     get:
-      description: Get a specific shopping item by its name
+      description: Retrieve a specific shopping item by its name
       parameters:
       - description: Item name
         in: path
@@ -96,25 +92,25 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ShoppingItem'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ErrorResponse'
       summary: Get a shopping item by name
       tags:
       - Shopping Items API
     put:
-      description: Update an existing shopping item's details
+      description: Update a specific shopping item by its name
       parameters:
       - description: Item name
         in: path
         name: name
         required: true
         type: string
-      - description: Shopping Item
+      - description: Updated shopping item
         in: body
-        name: item
+        name: shoppingItem
         required: true
         schema:
           $ref: '#/definitions/main.ShoppingItem'
@@ -122,11 +118,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ShoppingItem'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.ItemResponse'
+            $ref: '#/definitions/main.ErrorResponse'
       summary: Update a shopping item by name
       tags:
       - Shopping Items API

@@ -9,18 +9,15 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {
-            "name": "API Support",
-            "email": "support@example.com"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/shoppingItems": {
+        "/api/shoppingItems": {
             "get": {
-                "description": "Get a list of all shopping items",
+                "description": "Retrieve all shopping items",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -29,21 +26,24 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemsListResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.ShoppingItem"
+                            }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new shopping item to the list",
+                "description": "Add a new item to the shopping list",
                 "tags": [
                     "Shopping Items API"
                 ],
                 "summary": "Add a new shopping item",
                 "parameters": [
                     {
-                        "description": "Shopping Item",
-                        "name": "item",
+                        "description": "New shopping item",
+                        "name": "shoppingItem",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -55,21 +55,21 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
             }
         },
-        "/shoppingItems/{name}": {
+        "/api/shoppingItems/{name}": {
             "get": {
-                "description": "Get a specific shopping item by its name",
+                "description": "Retrieve a specific shopping item by its name",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -87,19 +87,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update an existing shopping item's details",
+                "description": "Update a specific shopping item by its name",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -113,8 +113,8 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Shopping Item",
-                        "name": "item",
+                        "description": "Updated shopping item",
+                        "name": "shoppingItem",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -126,13 +126,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
@@ -156,13 +156,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ResponseMessage"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
@@ -170,24 +170,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.ItemResponse": {
+        "main.ErrorResponse": {
             "type": "object",
             "properties": {
-                "data": {},
-                "message": {
+                "error": {
                     "type": "string"
                 }
             }
         },
-        "main.ItemsListResponse": {
+        "main.ResponseMessage": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/main.ShoppingItem"
-                    }
-                },
                 "message": {
                     "type": "string"
                 }
@@ -197,10 +190,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 2
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Milk"
                 }
             }
         }
@@ -210,11 +205,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/api",
+	Host:             "",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Shopping API",
-	Description:      "This is a sample API for managing shopping items.",
+	Description:      "A simple API to manage shopping items with PostgreSQL",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

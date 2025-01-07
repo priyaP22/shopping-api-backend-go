@@ -1,20 +1,16 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample API for managing shopping items.",
+        "description": "A simple API to manage shopping items with PostgreSQL",
         "title": "Shopping API",
-        "contact": {
-            "name": "API Support",
-            "email": "support@example.com"
-        },
+        "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
-    "basePath": "/api",
+    "basePath": "/",
     "paths": {
-        "/shoppingItems": {
+        "/api/shoppingItems": {
             "get": {
-                "description": "Get a list of all shopping items",
+                "description": "Retrieve all shopping items",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -23,21 +19,24 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemsListResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.ShoppingItem"
+                            }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new shopping item to the list",
+                "description": "Add a new item to the shopping list",
                 "tags": [
                     "Shopping Items API"
                 ],
                 "summary": "Add a new shopping item",
                 "parameters": [
                     {
-                        "description": "Shopping Item",
-                        "name": "item",
+                        "description": "New shopping item",
+                        "name": "shoppingItem",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -49,21 +48,21 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
             }
         },
-        "/shoppingItems/{name}": {
+        "/api/shoppingItems/{name}": {
             "get": {
-                "description": "Get a specific shopping item by its name",
+                "description": "Retrieve a specific shopping item by its name",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -81,19 +80,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update an existing shopping item's details",
+                "description": "Update a specific shopping item by its name",
                 "tags": [
                     "Shopping Items API"
                 ],
@@ -107,8 +106,8 @@
                         "required": true
                     },
                     {
-                        "description": "Shopping Item",
-                        "name": "item",
+                        "description": "Updated shopping item",
+                        "name": "shoppingItem",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -120,13 +119,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ShoppingItem"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
@@ -150,13 +149,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ResponseMessage"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.ItemResponse"
+                            "$ref": "#/definitions/main.ErrorResponse"
                         }
                     }
                 }
@@ -164,24 +163,17 @@
         }
     },
     "definitions": {
-        "main.ItemResponse": {
+        "main.ErrorResponse": {
             "type": "object",
             "properties": {
-                "data": {},
-                "message": {
+                "error": {
                     "type": "string"
                 }
             }
         },
-        "main.ItemsListResponse": {
+        "main.ResponseMessage": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/main.ShoppingItem"
-                    }
-                },
                 "message": {
                     "type": "string"
                 }
@@ -191,10 +183,12 @@
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 2
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Milk"
                 }
             }
         }
