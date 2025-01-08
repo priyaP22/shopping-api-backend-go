@@ -16,9 +16,17 @@ spec:
     spec:
       containers:
       - name: shopping-api-backend-go
-        image: shopping-api-backend-go:latest
+        image: docker.io/sathyapriyap12/shopping-api-backend-go:latest
         ports:
         - containerPort: 8080
         env:
-        - name: PORT
-          value: "8080"
+        - name: POSTGRES_HOST
+          value: "shopping-db.default.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: "admin"
+        - name: POSTGRES_PASSWORD
+          value: "mypassword"
+        - name: POSTGRES_DB
+          value: "shoppingdb"
