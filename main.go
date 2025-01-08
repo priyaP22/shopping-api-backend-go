@@ -218,7 +218,7 @@ func deleteItem(c *gin.Context) {
 	}
 
 	// Return 204 No Content after successful deletion
-	c.JSON(http.StatusOK, ResponseMessage{"Item deleted"})
+	c.Status(http.StatusNoContent) // Status 204
 }
 
 // @Summary Get all shopping items
