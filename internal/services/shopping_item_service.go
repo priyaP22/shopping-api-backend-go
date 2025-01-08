@@ -85,8 +85,16 @@ func GetAllItems(db *sql.DB) ([]models.ShoppingItem, error) {
 		}
 		items = append(items, item)
 	}
-	return items, nil
+
+	// If no items were found, ensure we return an empty array
+	if len(items) == 0 {
+		return []models.ShoppingItem{}, nil // Return an empty array instead of nil
+	}
+
+	return items, nil // Otherwise, return the list of items
 }
+
+
 
 // AddItem adds a new shopping item to the list
 func AddItem(db *sql.DB, item models.ShoppingItem) error {
