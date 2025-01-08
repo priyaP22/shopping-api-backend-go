@@ -70,8 +70,12 @@ This will:
 
 - Backend API will be available at `http://localhost:8080` (or via your GitHub Codespace URL in the format `https://<codespace-name>-8080.app.github.dev`)
 
-- Swagger Documentation will be available at the following URL:
-  [Swagger UI](http://localhost:8080/swagger/index.html)
+- Swagger Documentation will be available at the following URL:  
+  `{BASE_URL}/swagger/index.html`
+
+  Replace `{BASE_URL}` with the appropriate base URL for your environment:
+  - For local development, use `http://localhost:8080`.
+  - For GitHub Codespaces, use the URL in the format `https://<codespace-name>-8080.app.github.dev`.
 
 - Frontend will be available at `http://localhost:5000`
 
