@@ -1,21 +1,26 @@
 # Start from the official Golang image
 FROM golang:1.22-alpine
 
-# Set working directory
+# Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy and download dependencies
+# Copy go mod and sum files
 COPY go.mod go.sum ./
+
+# Download dependencies
 RUN go mod download
 
-# Copy source code
+# Copy the rest of the source code (including the 'cmd' folder)
 COPY . .
 
-# Build the application
-RUN go build -o main .
+# Set the working directory to the 'cmd' folder, where the main.go is
+WORKDIR /app/cmd
+
+# Build the Go application (specify the main.go file location)
+RUN go build -o /app/main .
 
 # Expose the application port
 EXPOSE 8080
 
 # Command to run the application
-CMD ["./main"]
+CMD ["/app/main"]
