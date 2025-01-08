@@ -11,12 +11,8 @@ services:
       - "8080:8080"
     depends_on:
       - db
-    environment:
-      POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: shoppingdb
+    env_file:
+      - .env
 
   db:
     image: postgres

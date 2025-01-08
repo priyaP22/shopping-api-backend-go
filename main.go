@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq" // PostgreSQL driver
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -40,6 +41,10 @@ var db *sql.DB
 // @BasePath /
 func main() {
 	var err error
+	err = godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 
 	// Connect to the PostgreSQL database
 	dbHost := os.Getenv("POSTGRES_HOST")
@@ -83,7 +88,17 @@ func main() {
 	}))
 
 	// Dynamically set Swagger host
-	swaggerHost := "improved-bassoon-r7j9v54q65425w55-8080.app.github.dev"
+	codespaceName := os.Getenv("CODESPACE_NAME")
+	githubDomain := os.Getenv("GITHUB_COSPACE_DOMAIN")
+	var swaggerHost string
+
+	if codespaceName != "" && githubDomain != "" {
+		// Construct the base URL for GitHub Codespaces
+		swaggerHost = fmt.Sprintf("%s-8080.%s", codespaceName, githubDomain)
+	} else {
+		// Default to localhost for local development
+		swaggerHost = "https://localhost:8080"
+	}
 
 	fmt.Println("Swagger Host:", swaggerHost)
 
