@@ -172,7 +172,8 @@ func updateItem(c *gin.Context) {
 		return
 	}
 
-	result, err := db.Exec("UPDATE shopping_items SET amount = $1 WHERE name = $2", updatedItem.Amount, name)
+	result, err := db.Exec("UPDATE shopping_items SET name = $1, amount = $2 WHERE name = $3", updatedItem.Name, updatedItem.Amount, name)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorResponse{"Failed to update item"})
 		return
