@@ -60,8 +60,7 @@ Strictly separate the **build**, **release**, and **run** stages.
 ### **Applied:**
 The project is **containerized** using **Docker**. It uses a **Dockerfile** to build the application image and the **docker-compose.yml** file to manage the containerized services.
 
-### ** Fix Needed:**
-Ensure you have a **CI/CD pipeline** to separate build, release, and run stages.
+Implemented **CI/CD pipeline** to separate build, release, and run stages.
 
 ---
 
@@ -105,7 +104,7 @@ The app is designed to **shut down gracefully** and release resources (e.g., dat
 
 ### ** Fix Needed:**
 Ensure that graceful shutdown logic is implemented using **Go’s os.Signal** package (e.g., `SIGTERM`, `SIGINT`).
-
+ 
 ---
 
 ## 10. **Dev/Prod Parity**
