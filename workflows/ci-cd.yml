@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Load Environment Variables
+        run: |
+          if [ -f .env ]; then
+            echo "Loading environment variables from .env file"
+            set -o allexport
+            source .env
+            set +o allexport
+          else
+            echo ".env file not found. Exiting."
+            exit 1
+          fi
+
+      - name: Log in to DockerHub
+        run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -t "$DOCKER_USERNAME/shopping-backend:latest" .
+
+      - name: Push Docker Image to DockerHub
+        run: docker push "$DOCKER_USERNAME/shopping-backend:latest"
