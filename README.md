@@ -3,7 +3,7 @@
 A simple PostgreSQL-based shopping items API built with Go and Gin framework. Features include CRUD operations for shopping items, with both Docker and Kubernetes deployment options.
 
 ## Related Documentation
-- [12-Factor Application Principles Documentation](link-to-12-factor-doc.md)
+- [12-Factor Application Principles Documentation](https://github.com/priyaP22/shopping-api-backend-go/blob/main/12-Factor-Methodology.md)
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ kubectl config use-context minikube
 # Apply all Kubernetes configurations from k8s directory
 kubectl apply -f k8s/
 
-# Set environment variable for the deployment
+# Set environment variable for the deployment if you are using codespace
 kubectl set env deployment/shopping-api-backend-go CODESPACE_NAME=$CODESPACE_NAME
 
 # Forward the service port to local machine
