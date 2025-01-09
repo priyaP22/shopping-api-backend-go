@@ -12,7 +12,7 @@ A simple PostgreSQL-based shopping items API built with Go and Gin framework. Fe
 
 ## Docker Setup
 
-### 1. Clone and Configure
+### Clone and Configure
 
 ```bash
 # Clone the repository and navigate to project directory
@@ -23,7 +23,7 @@ cd shopping-api-backend-go
 cp .env.sample .env.development
 ```
 
-### 2. Environment Configuration
+### Environment Configuration
 
 Update the following variables in your `.env.${ENV}` file:
 
@@ -35,7 +35,29 @@ Update the following variables in your `.env.${ENV}` file:
 
 For GitHub Codespaces, `CODESPACE_NAME` and `GITHUB_COSPACE_DOMAIN` are automatically set.
 
-I'll convert this into proper Markdown format with clear headers, code blocks, and formatting.
+### Using the Backend Docker Image
+
+To use our backend image directly, add the following to your `docker-compose.yml`:
+
+```yaml
+backend:
+  image: sathyapriyap12/shopping-backend:latest    # Use the specified Docker image
+  container_name: shopping-backend
+  networks:
+    - shopnet
+  ports:
+    - "8080:8080"
+  depends_on:
+    - db
+  env_file:
+    - .env.${ENV:-development}    # Load .env file based on ENV variable, defaults to development
+```
+
+## Important Notes
+* **Ensure the env_file line is included**. This allows for a default environment configuration. Without it, Docker Compose will fail if no .env file is found.
+* **Create a default .env.development file** with necessary environment variables, use .env.sample for reference
+
+This setup ensures proper functioning of the backend and Swagger.
 
 # Launch Application
 
