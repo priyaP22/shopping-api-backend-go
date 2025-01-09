@@ -177,7 +177,7 @@ Set up your database connection and ensure it’s accessible (check the credenti
 Run the migration command:
 
 ``` bash
-goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" up -dir=migrations
+goose postgres "host=<db_host> port=<db_port> user=<db_user> password=<db_password> dbname=<db_name> sslmode=disable" up -dir=migrations
 ```
 This will apply any unapplied migrations to the database.
 
@@ -186,21 +186,22 @@ To check the current status of the database migrations, including which migratio
 
 ``` bash
 
-goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" status -dir=migrations
-```
+goose postgres "host=<db_host> port=<db_port> user=<db_user> password=<db_password> dbname=<db_name> sslmode=disable" status -dir=migrations
+
 
 ### 5. Rolling Back Migrations
 If you need to roll back the last migration, run:
 
 ``` bash
-goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" down -dir=migrations
+goose postgres "host=<db_host> port=<db_port> user=<db_user> password=<db_password> dbname=<db_name> sslmode=disable" down -dir=migrations
+
 ```
 
 To rollback to a specific version, use:
 
 ``` bash
 
-goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" down-to <version> -dir=migrations
+goose postgres "host=<db_host> port=<db_port> user=<db_user> password=<db_password> dbname=<db_name> sslmode=disable" down-to <version> -dir=migrations
 ```
 
 ### 6. Versioning of Migrations
