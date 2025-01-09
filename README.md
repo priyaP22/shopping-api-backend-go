@@ -122,3 +122,8 @@ kubectl delete -f k8s/
 # Stop the Minikube cluster
 minikube stop
 ```
+# Pending Improvements
+
+## Kubernetes Configuration
+* Implement proper Secrets and ConfigMaps management
+* Replace direct environment variable declarations in deployment manifests
