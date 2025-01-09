@@ -54,10 +54,13 @@ backend:
 ```
 
 ## Important Notes
-* **Ensure the env_file line is included**. This allows for a default environment configuration. Without it, Docker Compose will fail if no .env file is found.
-* **Create a default .env.development file** with necessary environment variables, use .env.sample for reference
+<div style="color: darkred;">
+
+* **Include the `env_file` line** as shown above. This ensures a default environment configuration. Without it, Docker Compose will fail if no `.env` file is found.
+* **Create a default `.env.development` file** with necessary environment variables. You can use `.env.sample` as a reference.
 
 This setup ensures proper functioning of the backend and Swagger.
+</div>
 
 # Launch Application
 
