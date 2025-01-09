@@ -127,3 +127,84 @@ minikube stop
 ## Kubernetes Configuration
 * Implement proper Secrets and ConfigMaps management
 * Replace direct environment variable declarations in deployment manifests
+
+
+## Migrations
+
+### 1. **Initial Setup**
+Ensure that **Goose** is installed in your development environment.
+
+```bash
+go install github.com/pressly/goose/v3@latest
+
+```
+### 2. **Creating Migrations**
+
+To create a new migration (e.g., for adding a table or modifying the schema):
+
+Run the following command to create a migration file in the `migrations` folder:
+
+```bash
+goose create <migration_name> sql
+```
+This will generate a new migration file with a timestamp, such as 20250109112606_create_shopping_items_table.sql.
+
+In the generated migration file, add your up and down SQL statements:
+
+
+```bash
++goose Up
+-- +goose StatementBegin
+CREATE TABLE IF NOT EXISTS shopping_items (
+    name TEXT PRIMARY KEY,
+    amount INTEGER NOT NULL
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS shopping_items;
+-- +goose StatementEnd
+```
+
+
+
+### 3. Applying Migrations
+To apply the migrations to the database:
+
+Set up your database connection and ensure it’s accessible (check the credentials in .env).
+
+Run the migration command:
+
+``` bash
+goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" up -dir=migrations
+```
+This will apply any unapplied migrations to the database.
+
+### 4. Checking Migration Status
+To check the current status of the database migrations, including which migrations have been applied, use the following command:
+
+``` bash
+
+goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" status -dir=migrations
+```
+
+### 5. Rolling Back Migrations
+If you need to roll back the last migration, run:
+
+``` bash
+goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" down -dir=migrations
+```
+
+To rollback to a specific version, use:
+
+``` bash
+
+goose postgres "host=localhost port=5432 user=admin password=mypassword dbname=shoppingdb sslmode=disable" down-to <version> -dir=migrations
+```
+
+### 6. Versioning of Migrations
+Goose automatically keeps track of which migrations have been applied by maintaining a table (default: goose_db_version) in your database. You can customize the table name with the -table flag.
+
+
+
