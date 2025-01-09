@@ -30,3 +30,5 @@ spec:
           value: "mypassword"
         - name: POSTGRES_DB
           value: "shoppingdb"
+        - name: CODESPACE_NAME
+          value: "${CODESPACE_NAME}"

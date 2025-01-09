@@ -1,99 +1,110 @@
 # Shopping API Backend
 
-This is a simple API to manage shopping items with PostgreSQL, built with Go and the Gin framework. It includes functionality to add, update, delete, and retrieve shopping items. This backend is Dockerized for easy development and deployment.
+A simple PostgreSQL-based shopping items API built with Go and Gin framework. Features include CRUD operations for shopping items, with both Docker and Kubernetes deployment options.
+
+## Related Documentation
+- [12-Factor Application Principles Documentation](link-to-12-factor-doc.md)
 
 ## Prerequisites
 
-Before you start, make sure you have the following installed:
+- [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/) for container deployment
+- Minikube and kubectl for Kubernetes deployment
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/)
+## Docker Setup
 
-## Setup Instructions
-
-### 1. Clone the Repository
-
-Clone the repository to your local machine:
+### 1. Clone and Configure
 
 ```bash
+# Clone the repository and navigate to project directory
 git clone https://github.com/your-username/shopping-api-backend-go.git
 cd shopping-api-backend-go
-```
 
-### 2. Configure the Environment Variables
-
-The application uses environment variables for configuration. You need to create a `.env` file to store your local or Codespace environment settings.
-
-#### Generate .env for Local Development:
-
-Copy the contents of the `.env.sample` file to create your `.env` file:
-
-```bash
+# Create environment file from template
 cp .env.sample .env
 ```
 
-Open the newly created `.env` file and update the values for the following variables:
+### 2. Environment Configuration
 
-- `POSTGRES_HOST`: The address of your PostgreSQL database (e.g., localhost or db in Docker)
-- `POSTGRES_PORT`: The port your PostgreSQL database is running on (default is 5432)
-- `POSTGRES_USER`: The PostgreSQL username (default is admin)
-- `POSTGRES_PASSWORD`: The PostgreSQL password (set this to whatever you want)
-- `POSTGRES_DB`: The PostgreSQL database name (e.g., shoppingdb)
-- `CODESPACE_NAME`: This should be set if you are using GitHub Codespaces. This value is set automatically by GitHub, but you can define it manually if necessary
-- `GITHUB_COSPACE_DOMAIN`: This is the domain part used when in GitHub Codespaces (usually app.github.dev)
+Update the following variables in your `.env` file:
 
-#### Set Environment Variables for GitHub Codespaces:
+- `POSTGRES_HOST`: Database address (localhost or db)
+- `POSTGRES_PORT`: Database port (default: 5432)
+- `POSTGRES_USER`: Database username (default: admin)
+- `POSTGRES_PASSWORD`: Your chosen password
+- `POSTGRES_DB`: Database name (e.g., shoppingdb)
 
-If you are working inside GitHub Codespaces, GitHub will automatically set the `CODESPACE_NAME` and `GITHUB_COSPACE_DOMAIN` environment variables. You do not need to manually set these values unless you want to override them.
+For GitHub Codespaces, `CODESPACE_NAME` and `GITHUB_COSPACE_DOMAIN` are automatically set.
 
-Example:
+### 3. Launch Application
 
 ```bash
-# Example for GitHub Codespaces (no need to change these variables usually)
-CODESPACE_NAME=your-codespace-name
-GITHUB_COSPACE_DOMAIN=app.github.dev
-```
-
-### 3. Run the Application with Docker Compose
-
-Once your `.env` file is set up, you can start the application with Docker Compose. This will start all necessary services, including the backend, frontend, and PostgreSQL database.
-
-```bash
+# Build and start all services defined in docker-compose.yml
 docker-compose up --build
 ```
 
-This will:
-- Build the Docker images for the backend and frontend services
-- Start the services and make them available on your local machine or GitHub Codespace
+## Kubernetes Setup
 
-### 4. Access the Application
-
-- Backend API will be available at `http://localhost:8080` (or via your GitHub Codespace URL in the format `https://<codespace-name>-8080.app.github.dev`)
-
-- Swagger Documentation will be available at the following URL:  
-  `{BASE_URL}/swagger/index.html`
-
-  Replace `{BASE_URL}` with the appropriate base URL for your environment:
-  - For local development, use `http://localhost:8080`.
-  - For GitHub Codespaces, use the URL in the format `https://<codespace-name>-8080.app.github.dev`.
-
-- Frontend will be available at `http://localhost:5000`
-
-### 5. Testing the API
-
-You can test the API using curl, Postman, or any HTTP client. Example:
+### 1. Initialize Cluster
 
 ```bash
-curl -X 'GET' 'http://localhost:8080/api/shoppingItems' -H 'accept: application/json'
+# Start a local Kubernetes cluster
+minikube start
+
+# Switch Kubernetes context to minikube
+kubectl config use-context minikube
 ```
 
-### Stopping the Application
+### 2. Deploy and Configure
 
 ```bash
-docker-compose down
+# Apply all Kubernetes configurations from k8s directory
+kubectl apply -f k8s/
+
+# Set environment variable for the deployment
+kubectl set env deployment/shopping-api-backend-go CODESPACE_NAME=$CODESPACE_NAME
+
+# Forward the service port to local machine
+kubectl port-forward svc/shopping-api-backend-go-service 8080:8080
 ```
+
+## Accessing the Application
+
+The API is available at:
+- Local: `http://localhost:8080`
+- Codespaces: `https://<codespace-name>-8080.app.github.dev`
+
+Swagger documentation: `{BASE_URL}/swagger/index.html`
+Frontend interface: `http://localhost:5000`
 
 ## Troubleshooting
 
-- If you encounter issues connecting to the database, make sure the environment variables in `.env` are set correctly, especially the `POSTGRES_HOST` and `POSTGRES_PORT`
-- Make sure your Docker Compose environment is correctly set up, and that all required services (backend, db, frontend) are running
+- Verify environment variables in `.env`
+- Check service status:
+  ```bash
+  # List all running Docker containers and their status
+  docker-compose ps
+
+  # List all Kubernetes pods and their status
+  kubectl get pods
+  ```
+- View logs:
+  ```bash
+  # View logs from all Docker services
+  docker-compose logs
+
+  # View logs from Kubernetes deployment
+  kubectl logs deployment/shopping-api-backend-go
+  ```
+
+## Shutdown
+
+```bash
+# Stop and remove Docker containers, networks, and volumes
+docker-compose down
+
+# Remove Kubernetes resources
+kubectl delete -f k8s/
+
+# Stop the Minikube cluster
+minikube stop
+```
