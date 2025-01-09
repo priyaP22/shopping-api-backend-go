@@ -107,33 +107,24 @@ Have to ensure that graceful shutdown logic is implemented using **Go’s os.Sig
  
 ---
 
-## 10. **Dev/Prod Parity**
+# Dev/Prod Parity
 
-### **Principle:**
-Keep **development**, **staging**, and **production** as similar as possible.
+## Principle
+Keep **development**, **staging**, and **production** environments as similar as possible.
 
-### **Applied:**
-Currently, our project is using **Docker** and **Kubernetes**, which makes it easier to achieve **environment parity**.
+## Applied
+* **Docker** for local development, **Kubernetes** for production/staging.
+* Use `.env` files for environment variables.
+* **Docker Compose** loads environment files based on the `ENV` variable (defaults to `.env.development` if not set).
 
-### **Fix needed:**
-It is absolutely possible to have both **development** and **production** environments. Here’s how you can achieve it:
+## How It Works
 
-- **Development Environment**: This is typically local environment where we’re doing active development. In this case, we can use **Docker** and **docker-compose** to spin up the application locally.
-- **Production Environment**: This could be cloud platform or a **Kubernetes cluster** where the app is deployed for real use (with real users).
-
-To manage the different environments, use separate configuration files for each. For example:
-- `.env.development`
-- `.env.production`
-
-In your **Dockerfile** or **docker-compose.yml**, we can specify which .env file to use for each environment:
-
+### Docker Compose
 ```yaml
 env_file:
-  - .env.development   # For local development
-  
+  - .env.${ENV:-development}
 ```
-
----
+This keeps environments consistent and helps with smooth transitions between local and production setups.
 
 ### 11. Logs :ledger:
 
