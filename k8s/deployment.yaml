@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: shopping-api-backend-go
-        image: docker.io/sathyapriyap12/shopping-api-backend-go:latest
+        image: docker.io/sathyapriyap12/shopping-backend:latest
         ports:
         - containerPort: 8080
         env:
