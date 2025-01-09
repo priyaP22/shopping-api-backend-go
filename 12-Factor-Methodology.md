@@ -1,6 +1,6 @@
 # **12-Factor App Methodology**
 
-_This document describes the **12-factor app** methodology applied to the project, including explanations of each principle and how it has been implemented. The goal is to ensure that the application is maintainable, scalable, and follows best practices for cloud-native applications._
+_This document describes the **12-factor app** methodology applied to the project, including explanations of each principle and how it has been implemented. The goal is to ensure that our application is maintainable, scalable, and follows best practices for cloud-native applications._
 
 ---
 
@@ -90,7 +90,7 @@ The app binds to **port 8080** using the **Dockerfile** and **docker-compose.yml
 Scale out via the **process model**.
 
 ### **Applied:**
-The app is designed to be **horizontally scalable**. By using **Docker** and **Kubernetes** (in deployment), you can scale the number of replicas of the app.
+The app is designed to be **horizontally scalable**. By using **Docker** and **Kubernetes** (in deployment), we can scale the number of replicas of the app.
 
 ---
 
@@ -103,7 +103,7 @@ Maximize robustness with **fast startup** and **graceful shutdown**.
 The app is designed to **shut down gracefully** and release resources (e.g., database connections) when it receives termination signals.
 
 ### ** Fix Needed:**
-Ensure that graceful shutdown logic is implemented using **Go’s os.Signal** package (e.g., `SIGTERM`, `SIGINT`).
+Have to ensure that graceful shutdown logic is implemented using **Go’s os.Signal** package (e.g., `SIGTERM`, `SIGINT`).
  
 ---
 
@@ -113,19 +113,19 @@ Ensure that graceful shutdown logic is implemented using **Go’s os.Signal** pa
 Keep **development**, **staging**, and **production** as similar as possible.
 
 ### **Applied:**
-Currently, your project is using **Docker** and **Kubernetes**, which makes it easier to achieve **environment parity**.
+Currently, our project is using **Docker** and **Kubernetes**, which makes it easier to achieve **environment parity**.
 
 ### **Fix needed:**
-It is absolutely possible to have both **development** and **production** environments even in a university project. Here’s how you can achieve it:
+It is absolutely possible to have both **development** and **production** environments. Here’s how you can achieve it:
 
-- **Development Environment**: This is typically your local environment where you’re doing active development. In this case, you can use **Docker** and **docker-compose** to spin up the application locally.
-- **Production Environment**: This could be your university’s cloud platform or a **Kubernetes cluster** where the app is deployed for real use (with real users).
+- **Development Environment**: This is typically local environment where we’re doing active development. In this case, we can use **Docker** and **docker-compose** to spin up the application locally.
+- **Production Environment**: This could be cloud platform or a **Kubernetes cluster** where the app is deployed for real use (with real users).
 
 To manage the different environments, use separate configuration files for each. For example:
 - `.env.development`
 - `.env.production`
 
-In your **Dockerfile** or **docker-compose.yml**, you can specify which .env file to use for each environment:
+In your **Dockerfile** or **docker-compose.yml**, we can specify which .env file to use for each environment:
 
 ```yaml
 env_file:
@@ -140,7 +140,7 @@ env_file:
 **Principle:** Treat logs as event streams.
 
 **Applied:**  
-The app logs events, especially errors and connection status messages, using the **Go log package**. Logs are crucial for debugging and monitoring. These logs are generated within the application, and you can inspect the logs by viewing the container logs.
+The app logs events, especially errors and connection status messages, using the **Go log package**. Logs are crucial for debugging and monitoring. These logs are generated within the application, and we can inspect the logs by viewing the container logs.
 
 ---
 
@@ -149,6 +149,6 @@ The app logs events, especially errors and connection status messages, using the
 
 **Principle:** Run administrative/management tasks as one-off processes.
 
-**Fix needed:** Administrative tasks such as database migrations or backups can be managed separately. Ensure to handle one-off tasks like migrations through Kubernetes jobs or Docker containers.
+**Fix needed:** Administrative tasks such as database migrations or backups can be managed separately. Have to ensure to handle one-off tasks like migrations through Kubernetes jobs or Docker containers.
 
 ---

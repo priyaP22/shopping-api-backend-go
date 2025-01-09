@@ -20,12 +20,12 @@ git clone https://github.com/your-username/shopping-api-backend-go.git
 cd shopping-api-backend-go
 
 # Create environment file from template
-cp .env.sample .env
+cp .env.sample .env.development
 ```
 
 ### 2. Environment Configuration
 
-Update the following variables in your `.env` file:
+Update the following variables in your `.env.${ENV}` file:
 
 - `POSTGRES_HOST`: Database address (localhost or db)
 - `POSTGRES_PORT`: Database port (default: 5432)
@@ -35,12 +35,26 @@ Update the following variables in your `.env` file:
 
 For GitHub Codespaces, `CODESPACE_NAME` and `GITHUB_COSPACE_DOMAIN` are automatically set.
 
-### 3. Launch Application
+I'll convert this into proper Markdown format with clear headers, code blocks, and formatting.
+
+# Launch Application
+
+### Running the Application
 
 ```bash
-# Build and start all services defined in docker-compose.yml
-docker-compose up --build
+# Set the environment and build/start all services
+ENV=development docker-compose up --build
 ```
+
+### Supported Environments
+
+* `ENV=development` - Loads `.env.development`
+* `ENV=staging` - Loads `.env.staging`
+* `ENV=production` - Loads `.env.production`
+
+### Default Behavior
+
+If no `ENV` is specified, it defaults to `.env.development`.
 
 ## Kubernetes Setup
 
@@ -78,7 +92,7 @@ Frontend interface: `http://localhost:5000`
 
 ## Troubleshooting
 
-- Verify environment variables in `.env`
+- Verify environment variables in `.env.${ENV}`
 - Check service status:
   ```bash
   # List all running Docker containers and their status

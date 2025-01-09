@@ -23,9 +23,18 @@ var db *sql.DB
 // @description A simple API to manage shopping items with PostgreSQL
 // @BasePath /
 func main() {
-	// Load environment variables
-	if err := godotenv.Load("../.env"); err != nil { // Load from the root directory
-		log.Fatalf("Error loading .env file")
+	// Get the ENV variable
+	env := os.Getenv("ENV")
+	if env == "" {
+		env = "development" // Default to "development" if ENV is not set
+	}
+
+	// Build the .env file path based on ENV
+	envFile := "../.env." + env
+
+	// Load the environment variables from the .env file
+	if err := godotenv.Load(envFile); err != nil {
+		log.Fatalf("Error loading .env file: %s", err)
 	}
 
 	// Initialize DB connection
@@ -58,7 +67,7 @@ func main() {
 		swaggerHost = fmt.Sprintf("%s-8080.%s", codespaceName, githubDomain)
 	} else {
 		// Default to localhost for local development
-		swaggerHost = "https://localhost:8080"
+		swaggerHost = "localhost:8080"
 	}
 
 	// Set host in Swagger documentation

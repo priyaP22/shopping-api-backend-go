@@ -10,7 +10,7 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - .env.${ENV:-development} # Dynamically load the .env file based on the ENV variable , defaults to development if not provided
 
   db:
     image: postgres
