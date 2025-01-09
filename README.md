@@ -121,14 +121,8 @@ kubectl delete -f k8s/
 
 # Stop the Minikube cluster
 minikube stop
+
 ```
-# Pending Improvements
-
-## Kubernetes Configuration
-* Implement proper Secrets and ConfigMaps management
-* Replace direct environment variable declarations in deployment manifests
-
-
 ## Migrations
 
 ### 1. **Initial Setup**
@@ -207,7 +201,10 @@ goose postgres "host=<db_host> port=<db_port> user=<db_user> password=<db_passwo
 ### 6. Versioning of Migrations
 Goose automatically keeps track of which migrations have been applied by maintaining a table (default: goose_db_version) in your database. You can customize the table name with the -table flag.
 
+# Pending Improvements
 
-
+## Kubernetes Configuration
+* Implement proper Secrets and ConfigMaps management
+* Replace direct environment variable declarations in deployment manifests
 
 
