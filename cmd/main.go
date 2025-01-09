@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
 	"shopping-api-backend-go/docs"
 	"shopping-api-backend-go/internal/services"
 	"shopping-api-backend-go/web"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/joho/godotenv"
@@ -23,6 +27,8 @@ var db *sql.DB
 // @description A simple API to manage shopping items with PostgreSQL
 // @BasePath /
 func main() {
+	log.Println("Application starting...")
+
 	// Get the ENV variable
 	env := os.Getenv("ENV")
 	if env == "" {
@@ -76,6 +82,36 @@ func main() {
 	// Swagger Endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// Start server
-	r.Run(":8080") // Default is localhost:8080
+	// Create an http.Server
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	// Go routine to start the server
+	go func() {
+		log.Println("Server starting on :8080")
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("Shutdown signal received, initiating graceful shutdown...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("Server forced to shutdown: %v\n", err)
+	}
+
+	// Clean up other resources like DB connections
+	if err := db.Close(); err != nil {
+		log.Printf("Error closing database connection: %v", err)
+	}
+
+	log.Println("Server exited gracefully")
 }
