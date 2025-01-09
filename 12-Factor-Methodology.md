@@ -109,10 +109,14 @@ Treat logs as event streams.
 ## Applied
 The app logs events, especially errors and connection status messages, using the **Go log package**. Logs are crucial for debugging and monitoring. These logs are generated within the application, and we can inspect the logs by viewing the container logs.
 
-# 12. Admin Processes
+## 12. **Admin Processes**
 
-## Principle
+### Principle
 Run administrative/management tasks as one-off processes.
 
-## Applied
-Administrative tasks such as database migrations or backups can be managed separately. Have to ensure to handle one-off tasks like migrations through Kubernetes jobs or Docker containers.
+### Applied
+Currently, administrative tasks such as database migrations are managed manually using commands. For database migrations, we use the **Goose migration tool**, which allows us to run migrations through command-line instructions. These migrations can be applied through **Kubernetes Jobs** or **Docker containers** as part of one-off tasks.
+
+In the future, this process may be automated to run before the backend service starts, ensuring that the database schema is always up to date without manual intervention. This could involve integrating the migration step into the backend startup sequence, ensuring that all pending migrations are applied automatically before the application becomes fully operational.
+
+By automating this process, we can reduce the likelihood of schema inconsistencies across environments and ensure smoother deployments.
