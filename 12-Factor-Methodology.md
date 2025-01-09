@@ -10,7 +10,7 @@ _This document describes the **12-factor app** methodology applied to the projec
 There should be a **single codebase** tracked in version control, with many deploys.
 
 ### Applied:
-Your project is maintained in a **single Git repository**. The code is versioned using **Git**.
+The project is maintained in a **single Git repository**. The code is versioned using **Git**.
 
 ---
 
