@@ -112,14 +112,9 @@ Have to ensure that graceful shutdown logic is implemented using **Go’s os.Sig
 ## Principle
 Keep **development**, **staging**, and **production** environments as similar as possible.
 
-## Applied
-* **Docker** for local development, **Kubernetes** for production/staging.
-* Use `.env` files for environment variables.
-* **Docker Compose** loads environment files based on the `ENV` variable (defaults to `.env.development` if not set).
+### **Applied:**
+Currently, the project is using **Docker** and **Kubernetes**, which makes it easier to achieve **environment parity**. The project is currently set up with a development environment using Docker, ensuring a consistent local setup. In the future, this setup can be scaled to support additional environments like production.
 
-## How It Works
-
-### Docker Compose
 ```yaml
 env_file:
   - .env.${ENV:-development}
